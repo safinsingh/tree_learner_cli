@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "module": "esnext", // Enables ESM
+      "target": "esnext",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "strict": true
+    }
+  }
+  
