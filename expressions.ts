@@ -69,3 +69,15 @@ export const CURIOSITY_EXPRESSIONS = [
 	"It's time to uncover",
 	"I'm interested in exploring",
 ];
+
+export type ExpressionCollection = {
+	curiosityExpressions: string[];
+	understandingExpressions: string[];
+	explainerExpressions: string[];
+};
+
+export const defaultExpressions: ExpressionCollection = {
+	curiosityExpressions: CURIOSITY_EXPRESSIONS,
+	understandingExpressions: UNDERSTANDING_EXPRESSIONS,
+	explainerExpressions: EXPLAINER_EXPRESSIONS,
+};

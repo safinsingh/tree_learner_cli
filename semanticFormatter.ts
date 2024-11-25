@@ -1,42 +1,60 @@
 import { type MindTree } from "./mindTree";
 import {
-	CURIOSITY_EXPRESSIONS,
-	EXPLAINER_EXPRESSIONS,
+	defaultExpressions,
+	ExpressionCollection,
 	INTRO_EXPRESSIONS,
-	UNDERSTANDING_EXPRESSIONS,
 } from "./expressions";
 
 function randomElement<T>(array: T[]): T {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
-export type FormattedMindTree = {
-	current: string[];
-	sections?: FormattedMindTree[];
+type FormattedMindTreeNode = {
+	curiosityExpression: string;
+	topic: string;
+	explainerExpression: string;
+	summary: string;
 };
+
+export type FormattedMindTree =
+	| (FormattedMindTreeNode & { sections: FormattedMindTree[] })
+	| (FormattedMindTreeNode & { understandingExpression: string });
 
 function formatMindTree1(
 	node: MindTree,
-	expressions: string[]
+	{
+		curiosityExpressions,
+		explainerExpressions,
+		understandingExpressions,
+	}: ExpressionCollection = defaultExpressions
 ): FormattedMindTree {
-	const ret: FormattedMindTree = {
-		current: [
-			`${randomElement(expressions)} ${node.topic}`,
-			`${randomElement(EXPLAINER_EXPRESSIONS)} ${node.summary}`,
-		],
+	const formattedNode: FormattedMindTreeNode = {
+		curiosityExpression: randomElement(curiosityExpressions),
+		topic: node.topic,
+		explainerExpression: randomElement(explainerExpressions),
+		summary: node.summary,
 	};
 
-	if (node.subTopics) {
-		ret.sections = node.subTopics.map((subTopic) =>
-			formatMindTree1(subTopic, CURIOSITY_EXPRESSIONS)
-		);
+	if (node.subTopics && node.subTopics.length > 0) {
+		return {
+			...formattedNode,
+			sections: node.subTopics.map((subTopic) => formatMindTree1(subTopic)),
+		};
 	} else {
-		ret.current.push(randomElement(UNDERSTANDING_EXPRESSIONS));
+		return {
+			...formattedNode,
+			understandingExpression: randomElement(understandingExpressions),
+		};
 	}
-
-	return ret;
 }
 
-export function formatMindTree(map: MindTree): FormattedMindTree {
-	return formatMindTree1(map, INTRO_EXPRESSIONS);
+export function formatMindTree(
+	map: MindTree,
+	introExpressions = INTRO_EXPRESSIONS
+): FormattedMindTree {
+	let tmpExpressionCollection = {
+		...defaultExpressions,
+		curiosityExpressions: introExpressions,
+	};
+	return formatMindTree1(map, tmpExpressionCollection);
 }

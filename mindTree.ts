@@ -20,14 +20,16 @@ export type ExploreOptions = {
 	topic: string;
 	depth: number;
 	breadth: number;
+	summarySentences?: number;
 };
 export async function explore({
 	topic,
 	depth,
 	breadth,
+	summarySentences = 3,
 }: ExploreOptions): Promise<MindTree> {
 	const page = await wiki.page(topic);
-	const pageIntro = getFirstNSentences(await page.intro(), 3);
+	const pageIntro = getFirstNSentences(await page.intro(), summarySentences);
 	const mindNode = { topic, summary: pageIntro };
 
 	if (depth === 0) {
