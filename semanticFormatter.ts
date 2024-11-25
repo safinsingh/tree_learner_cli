@@ -9,7 +9,7 @@ function randomElement<T>(array: T[]): T {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
-type FormattedMindTreeNode = {
+export type FormattedMindTreeNode = {
 	curiosityExpression: string;
 	topic: string;
 	explainerExpression: string;
